@@ -168,7 +168,7 @@ message FasterRcnn {
   // If True, uses implementation of ops with static shape guarantees when
   // running evaluation (specifically not is_training if False).
   optional bool use_static_shapes_for_eval = 37 [default = false];
-  optional uint32 num_input_channels = 28 [default=3];
+  optional uint32 num_input_channels = 6 [default=3];
 }
 
 

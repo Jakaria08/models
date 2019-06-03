@@ -42,6 +42,7 @@ class FasterRCNNResnetV1FeatureExtractor(
                resnet_model,
                is_training,
                first_stage_features_stride,
+               num_input_channels=6,
                batch_norm_trainable=False,
                reuse_weights=None,
                weight_decay=0.0):
@@ -64,7 +65,7 @@ class FasterRCNNResnetV1FeatureExtractor(
     self._architecture = architecture
     self._resnet_model = resnet_model
     super(FasterRCNNResnetV1FeatureExtractor, self).__init__(
-        is_training, first_stage_features_stride, batch_norm_trainable,
+        is_training, first_stage_features_stride, num_input_channels, batch_norm_trainable,
         reuse_weights, weight_decay)
 
   def preprocess(self, resized_inputs):
@@ -84,8 +85,8 @@ class FasterRCNNResnetV1FeatureExtractor(
         tensor representing a batch of images.
 
     """
-    if resized_inputs.shape.as_list()[3] == 3:
-      channel_means = [123.68, 116.779, 103.939]
+    if resized_inputs.shape.as_list()[3] == 6:
+      channel_means = [123.68, 116.779, 103.939, 123.68, 116.779, 103.939]
       return resized_inputs - [[channel_means]]
     else:
       return resized_inputs
@@ -208,6 +209,7 @@ class FasterRCNNResnet101FeatureExtractor(FasterRCNNResnetV1FeatureExtractor):
   def __init__(self,
                is_training,
                first_stage_features_stride,
+               num_input_channels=6,
                batch_norm_trainable=False,
                reuse_weights=None,
                weight_decay=0.0):
@@ -226,7 +228,7 @@ class FasterRCNNResnet101FeatureExtractor(FasterRCNNResnetV1FeatureExtractor):
     """
     super(FasterRCNNResnet101FeatureExtractor, self).__init__(
         'resnet_v1_101', resnet_v1.resnet_v1_101, is_training,
-        first_stage_features_stride, batch_norm_trainable,
+        first_stage_features_stride, batch_norm_trainable, num_input_channels,
         reuse_weights, weight_decay)
 
 
