@@ -455,6 +455,15 @@ class TfExampleDecoder(data_decoder.DataDecoder):
       image = tf.to_float(tf.greater(image, 0))
       return image
 
+    def _read_image(self, keys_to_tensors):
+        image_encoded = keys_to_tensors['image/encoded']
+        height = keys_to_tensors['image/height']
+        width = keys_to_tensors['image/width']
+        channels = keys_to_tensors['image/channels']
+        to_shape = tf.cast(tf.stack([height, width, channels]), tf.int32)
+        image = tf.reshape(tf.decode_raw(image_encoded, tf.uint8), to_shape)
+        return image
+
     png_masks = keys_to_tensors['image/object/mask']
     height = keys_to_tensors['image/height']
     width = keys_to_tensors['image/width']
