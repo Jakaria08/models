@@ -177,6 +177,8 @@ class TfExampleDecoder(data_decoder.DataDecoder):
             tf.FixedLenFeature((), tf.int64, default_value=1),
         'image/width':
             tf.FixedLenFeature((), tf.int64, default_value=1),
+        'image/channels':
+            tf.FixedLenFeature((), tf.int64, default_value=1),
         # Image-level labels.
         'image/class/text':
             tf.VarLenFeature(tf.string),
@@ -230,7 +232,9 @@ class TfExampleDecoder(data_decoder.DataDecoder):
           repeated=True)
     self.items_to_handlers = {
         fields.InputDataFields.image:
-            image,
+            slim_example_decoder.ItemHandlerCallback(
+              keys=['image/encoded', 'image/height', 'image/width', 'image/channels'],
+              func=self._read_image),
         fields.InputDataFields.source_id: (
             slim_example_decoder.Tensor('image/source_id')),
         fields.InputDataFields.key: (
